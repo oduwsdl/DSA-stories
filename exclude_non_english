@@ -1,0 +1,2 @@
+javac -classpath "lib/*" source_code/DetectLanguage.java
+java -classpath ".:lib/*" source_code.DetectLanguage $1 $2

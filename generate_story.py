@@ -127,5 +127,8 @@ else:
     print "Using cached version of english: "+collection_directory+"/timemap_english.txt"
     
 memento_quality_utilities.compute_quality_damage(collection_directory)
-story_extractor.generate_story(collection_directory, args.title, args.selection, args.slug, args.starttime, args.endtime)
+stories = story_extractor.generate_story(collection_directory, args.title, args.selection, args.slug, args.starttime, args.endtime)
 
+with open(output_file, 'w') as f:
+    for story in stories:
+        f.write('{}\t{}\n'.format(stories[0], stories[1]))

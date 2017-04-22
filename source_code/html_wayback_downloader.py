@@ -62,6 +62,10 @@ def get_one_memento(dt, uri):
         the_page = ""
         uri = uri.replace('\n','')
         uri = uri.replace(dt,dt+"id_")
+
+        if uri[0:5] != 'http':
+            uri = 'https:' + uri
+
         try:
          #   request = urllib2.Request(uri)
          #   opener = urllib2.build_opener()

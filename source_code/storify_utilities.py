@@ -3,7 +3,8 @@ import requests
 from newspaper import Article
 from urlparse import urlparse
 import time
-from rake import Rake
+#from rake import Rake
+from RAKE import Rake
 import os
 import codecs
 import requests

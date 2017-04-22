@@ -32,6 +32,10 @@ def compute_quality_damage(collection_directory):
         uri_id = fields[0]
         dt = fields[1]
         uri = fields[2].replace("\n","")
+
+        if uri[0:5] != 'http':
+            uri = 'https:' + uri
+
         #print uri
         memento_damage = get_memento_damage(uri)
         if memento_damage == None:

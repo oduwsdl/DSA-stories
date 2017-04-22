@@ -127,8 +127,10 @@ def generate_story(base_dir, title, selection, slug, start_dt="19900101121200", 
 
 	#Select random page and then list all the rest of the pages
 	all_selected_pages.sort()	
-#	for page in all_selected_pages:
-#		print page[0],page[1]
-	storify_utilities.submit_link_to_storify(all_selected_pages, "", base_dir, title, slug)
+	for page in all_selected_pages:
+		print page[0],page[1]
+#	storify_utilities.submit_link_to_storify(all_selected_pages, "", base_dir, title, slug)
 	#storify_utilities.submit_article_to_storify(all_selected_pages, "", base_dir, title, slug)
+
+    return all_selected_pages
 
