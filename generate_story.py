@@ -131,4 +131,4 @@ stories = story_extractor.generate_story(collection_directory, args.title, args.
 
 with open(output_file, 'w') as f:
     for story in stories:
-        f.write('{}\t{}\n'.format(stories[0], stories[1]))
+        f.write('{}\t{}\n'.format(stories[0].encode('utf-8'), stories[1].encode('utf-8'))
