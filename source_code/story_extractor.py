@@ -132,5 +132,5 @@ def generate_story(base_dir, title, selection, slug, start_dt="19900101121200", 
 #	storify_utilities.submit_link_to_storify(all_selected_pages, "", base_dir, title, slug)
 	#storify_utilities.submit_article_to_storify(all_selected_pages, "", base_dir, title, slug)
 
-    return all_selected_pages
+	return all_selected_pages
 
