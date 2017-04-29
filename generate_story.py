@@ -51,6 +51,10 @@ parser.add_argument('-st', dest='starttime', default="19900101120101",
                    
 parser.add_argument('-et', dest='endtime', default="20161231120101",
                     help='End time, default 20161231120101.')
+
+parser.add_argument('-md', dest='damage_uri', default='http://memento-damage.cs.odu.edu/api/damage',
+                    help='memento damage URI prefix for memento damage service')
+
 parser.add_argument('-l', dest='slug', default="stories",
                     help='Storify slug')
 args = parser.parse_args()
@@ -126,7 +130,7 @@ if not(os.path.exists(collection_directory+"/timemap_english.txt")):
 else:
     print "Using cached version of english: "+collection_directory+"/timemap_english.txt"
     
-memento_quality_utilities.compute_quality_damage(collection_directory)
+memento_quality_utilities.compute_quality_damage(collection_directory, damage_uri)
 stories = story_extractor.generate_story(collection_directory, args.title, args.selection, args.slug, args.starttime, args.endtime)
 
 #with open(output_file, 'w') as f:

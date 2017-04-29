@@ -28,7 +28,7 @@ def get_memento_damage(damage_uri, mem_uri):
     return total
 
 
-def compute_quality_damage(collection_directory):
+def compute_quality_damage(collection_directory, damage_uri):
     timemap_file_englith = open(collection_directory+"/timemap_english.txt")
     timemap_file_quality_path = collection_directory+"/timemap_quality.txt"
     
@@ -49,7 +49,7 @@ def compute_quality_damage(collection_directory):
             uri = 'https:' + uri
 
         #print uri
-        memento_damage = get_memento_damage(uri)
+        memento_damage = get_memento_damage(damage_uri, uri)
         if memento_damage == None:
             print "Error in getting quality for "+uri 
             memento_damage = 0     
