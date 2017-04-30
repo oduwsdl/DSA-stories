@@ -13,6 +13,9 @@ import urlparse
 import story_extractor
 import memento_quality_utilities
 import logging
+import extract_title_and_h_from_timemap
+
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger('generate_story')
 out_hdlr = logging.StreamHandler(sys.stdout)
@@ -124,7 +127,9 @@ else:
     parser.print_help() 
 
 html_wayback_downloader.download_html_from_wayback(timemap_file_name,collection_directory)      
-os.system('./extract_text_from_html '+timemap_file_name+' '+  collection_directory)
+# just extract title and h1
+#os.system('./extract_text_from_html '+timemap_file_name+' '+  collection_directory)
+extract_title_and_h_from_timemap.extract_title_and_h_from_seed_list(timemap_file_name, collection_directory)
 
 if not(os.path.exists(collection_directory+"/ontopic_timemap.txt")):
     if mode == "cosin" :
