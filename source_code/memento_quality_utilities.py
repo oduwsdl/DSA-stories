@@ -23,7 +23,10 @@ def get_memento_damage(damage_uri, mem_uri):
     service_uri = '{}/{}'.format(damage_uri, mem_uri)
     resp = requests.get(service_uri)
 
-    total = float(resp.json()['total_damage'])
+    try:
+        total = float(resp.json()['total_damage'])
+    except KeyError:
+        total = 0
 
     return total
 
