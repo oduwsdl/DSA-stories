@@ -63,7 +63,7 @@ def get_one_memento(dt, uri):
         uri = uri.replace('\n','')
         uri = uri.replace(dt,dt+"id_")
 
-        if uri[0:5] != 'http':
+        if uri[0:4] != 'http':
             uri = 'https:' + uri
 
         try:

@@ -63,7 +63,7 @@ def compute_quality_damage(collection_directory, damage_uri):
         dt = fields[1]
         uri = fields[2].replace("\n","")
 
-        if uri[0:5] != 'http':
+        if uri[0:4] != 'http':
             uri = 'https:' + uri
 
         #print uri

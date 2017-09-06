@@ -20,13 +20,18 @@ def compute_simhash(words):
         words.sort()
         return Simhash(" ".join(words)).value
 
-def remove_near_duplicate(collection):
+def remove_near_duplicate(collection, base_dir):
     reduced_collection = []
-    for uri_id in collection:
-        timemap = collection[uri_id]
-        reduced_timemap = remove_near_duplicate_tm(timemap, uri_id)
-        for m in reduced_timemap:
-            reduced_collection.append(m)
+
+    with open("{}/timemap_removednearduplicates.txt".format(base_dir), 'w') as f:
+
+        for uri_id in collection:
+            timemap = collection[uri_id]
+            reduced_timemap = remove_near_duplicate_tm(timemap, uri_id)
+            for m in reduced_timemap:
+                f.write("{}\t{}\t{}\t{}\n".format(m[0], m[1], m[2], m[3]))
+                reduced_collection.append(m)
+
     return reduced_collection
 
 def remove_near_duplicate_tm(timemap, uri_id):

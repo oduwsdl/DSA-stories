@@ -9,7 +9,8 @@ import os
 
 orginalExpression = re.compile( r"<http://[A-Za-z0-9.:=/%-_ ]*>; [\s]*rel=\"original\"," )
 #mementoExpression = re.compile( r"(<http://[A-Za-z0-9.:=/&,%-_ \?]*>;\s?rel=\"(memento|first memento|last memento|first memento last memento|first last memento)\";\s?datetime=\"(Sat|Sun|Mon|Tue|Wed|Thu|Fri), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (19|20)\d\d \d\d:\d\d:\d\d GMT\")" )
-mementoExpression = re.compile( r"(<//[A-Za-z0-9.:=/&,%-_ \?]*>;\s?rel=\"(memento|first memento|last memento|first memento last memento|first last memento)\";\s?datetime=\"(Sat|Sun|Mon|Tue|Wed|Thu|Fri), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (19|20)\d\d \d\d:\d\d:\d\d GMT\")" )
+#mementoExpression = re.compile( r"(<//[A-Za-z0-9.:=/&,%-_ \?]*>;\s?rel=\"(memento|first memento|last memento|first memento last memento|first last memento)\";\s?datetime=\"(Sat|Sun|Mon|Tue|Wed|Thu|Fri), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (19|20)\d\d \d\d:\d\d:\d\d GMT\")" )
+mementoExpression = re.compile( r"(<[^>]*>;\s?rel=\"(memento|first memento|last memento|first memento last memento|first last memento)\";\s?datetime=\"(Sat|Sun|Mon|Tue|Wed|Thu|Fri), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (19|20)\d\d \d\d:\d\d:\d\d GMT\")" )
 zeroMementoExpression = re.compile(r"Resource: http://[A-Za-z0-9.:=/&,%-_ ]*")
 
 def download(seed_list_file_name, base_timemap_link_uri , collection_directory, start_dt="19900101121200", end_dt="20200101000000"):
@@ -30,13 +31,16 @@ def download(seed_list_file_name, base_timemap_link_uri , collection_directory, 
         print "Downloading timemap using uri "+base_timemap_link_uri+"/"+uri
 
         memento_list = get_mementos_from_timemap(base_timemap_link_uri+"/"+uri, start_dt, end_dt)
-        
+
+        print "writing {} mementos to file {}".format(len(memento_list), timemap_file_path)
+
         write_timemap_to_file(id,memento_list,timemap_file)   
     timemap_file.close()
     
 def write_timemap_to_file(id, memento_list,timemap_file) :       
         count = 1
         for memento in memento_list:
+            print("writing memento to timemap file {}: {}\t{}\t{}\t{}".format(timemap_file, id, memento[0], count, memento[1]))
             timemap_file.write( str(id)+"\t"+memento[0]+"\t"+str(count)+"\t"+memento[1]+"\n")
             timemap_file.flush()
             count = count + 1
@@ -55,7 +59,10 @@ def get_mementos_from_timemap(base_timemap_link, start_dt="19900101121200", end_
             response.close();
             count = 0
 
+            print("the page: {}".format(the_page))
+
             list =re.findall(mementoExpression,the_page)
+            print("memento list: {}".format(list))
             for mem in list:
                 count = count+1
                 list = mem[0].split(';')

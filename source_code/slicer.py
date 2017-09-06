@@ -30,7 +30,7 @@ def dynamic_per_number_of_mementos(collection, n):
            print str(t)+"\t"+str( len(dynamic_slice_collection[t]))
     return dynamic_slice_collection
 
-def static_per_slice_number(collection):
+def static_per_slice_number(collection, base_dir):
     number_of_slices = 28 + math.log(len(collection))
     mementos_per_slice_count = math.ceil(len(collection)/number_of_slices)
     print mementos_per_slice_count

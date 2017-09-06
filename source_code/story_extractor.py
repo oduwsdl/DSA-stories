@@ -67,20 +67,47 @@ def read_collection_text_files(timemap_list_file, input_base_dir, start_dt, end_
     return collection
 
 
-def cluster_time_slice(time_slice_list, selection):
+def cluster_time_slice(time_slice_list, selection, slices_clusters_file, slice_id):
 	simhash_list = []
-	
+
 	for item in time_slice_list:
+		print("the first part of the item: {}".format(item[1]))
+		print("appending data to simhash list: {}".format(item[2]))
 		simhash_list.append(item[2])
-	
+	#
+	# eps: The maximum distance between two samples for them to be considered as
+	# in the same neighborhood
+	#
+	# min_samples: The number of samples (or total weight) in a neighborhood for a
+	# point to be considered as a core point. This includes the point itself.
+	#
+	# metric: The metric to use when calculating distance between instances in a
+	# feature array. If metric is a string or callable, it must be one of the 
+	# options allowed by metrics.pairwise.calculate_distance for its metric 
+	# parameter. If metric is "precomputed", X is assumed to be a distnce
+	# matrix and must be square. X may be a sparse matrix, in which case 
+	# only nonzero elements may be considered neighbors for DBSCAN.
+	#
 	X = np.matrix(simhash_list)
 	db = DBSCAN(eps=0.3, min_samples=2, metric=simhash_utilities.myhamdist).fit(X.T)
+
+	print("db: {}".format(db))
+	print("type(db): {}".format(type(db)))
+
 	clusters = {}
 	for index, label in enumerate(db.labels_):
+		print("working on index {} and label {}".format(index, label))
 		if not(label in clusters):
 			clusters[label] = []
-		#print time_slice_list[index]
+		print("placing {} in cluster {}".format(time_slice_list[index], label))
 		clusters[label].append(time_slice_list[index])
+		cluster = label
+
+		mdt = time_slice_list[index][0]
+		urim = time_slice_list[index][1]
+
+		slices_clusters_file.write("{}\t{}\t{}\t{}\n".format(mdt, urim, slice_id, cluster))
+
 	if selection == "quality" :
 		return choose_high_quality_memento_from_cluster(clusters)
 	else:
@@ -111,19 +138,33 @@ def generate_story(base_dir, title, selection, slug, start_dt="19900101121200", 
 	timemap_list_file=open(base_dir+"/timemap_quality.txt")
 	collection = read_collection_text_files(timemap_list_file, base_dir, start_dt, end_dt)
 	print len(collection)
-	reduced_collection = simhash_utilities.remove_near_duplicate(collection)
+	reduced_collection = simhash_utilities.remove_near_duplicate(collection, base_dir)
 	print len(reduced_collection)
     
     # Sort by memento datetime
 	reduced_collection.sort()
+	print("reduced collection follows:")
 	print reduced_collection
 	#Slice collection by number of mementos in each slice
-	time_slice_collection = slicer.static_per_slice_number(reduced_collection)
+	time_slice_collection = slicer.static_per_slice_number(reduced_collection, base_dir)
 
+	with open("{}/timemap_slices.txt".format(base_dir), 'w') as f:
+		for slice_id in time_slice_collection:
+			for item in time_slice_collection[slice_id]:
+				dt = item[0] 
+				urim = item[1]
+				shash = item[2]
+				damage = item[3]
+
+				f.write("{}\t{}\t{}\t{}\t{}\n".format(dt, urim, slice_id, shash, damage))
+    
 	#cluster the pages of each time slice
 	all_selected_pages = []
-	for t in time_slice_collection.keys():
-		all_selected_pages += cluster_time_slice(time_slice_collection[t], selection)
+	with open("{}/timemap_slices_clusters.txt".format(base_dir), 'w') as slices_clusters_file:
+		for t in time_slice_collection.keys():
+			print("time slice collection for key {}: {}".format(t, time_slice_collection[t]))
+			all_selected_pages += cluster_time_slice(time_slice_collection[t], selection,
+				slices_clusters_file, t)
 
 	#Select random page and then list all the rest of the pages
 	all_selected_pages.sort()	
