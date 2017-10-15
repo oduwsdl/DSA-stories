@@ -88,6 +88,11 @@ if args.mode != None:
          sys.exit(1)
          
 base_timemap_link_uri = "https://wayback.archive-it.org/"
+
+print(args.mode)
+print(args.id)
+print(args.selection)
+
 if args.id !=None:
     # extract from id
     collection_id = args.id

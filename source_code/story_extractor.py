@@ -137,9 +137,9 @@ def generate_story(base_dir, title, selection, slug, start_dt="19900101121200", 
 	#reading the collection
 	timemap_list_file=open(base_dir+"/timemap_quality.txt")
 	collection = read_collection_text_files(timemap_list_file, base_dir, start_dt, end_dt)
-	print len(collection)
+	print "collection size before near duplicate removal: {}".format(len(collection))
 	reduced_collection = simhash_utilities.remove_near_duplicate(collection, base_dir)
-	print len(reduced_collection)
+	print "collection size after near duplicate removal: {}".format(len(reduced_collection))
     
     # Sort by memento datetime
 	reduced_collection.sort()
